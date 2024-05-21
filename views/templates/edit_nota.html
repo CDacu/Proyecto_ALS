@@ -1,0 +1,83 @@
+{% extends "skeleton.html" %}
+
+{% block contents %}
+
+{% if usr %}
+
+<div id="dvEditNota" class="card" style="margin: 10px">
+    <div class="card-header">Editar Nota</div>
+    <div class="card-body">
+        <form id="frmEditNota" name="frmEditNota" action="/nota/edit" method="POST">
+            <input type="hidden" id="notaId" name="notaId" value="{{ nota.get_safe_id(srp) }}" /> <!-- TODO: Hay un problema al pasar el id -->
+            <label for="edTitle">Título</label>
+            <input type="text" id="edTitle" name="edTitle" value="{{ nota.title }}" placeholder="Título..." required />
+            <br/>
+
+            <label for="edType">Tipo</label>
+            <select id="edType" name="edType" required>
+                <option value="normal" {% if nota.note_type == "normal" %}selected{% endif %}>Normal</option>
+                <option value="lista" {% if nota.note_type == "lista" %}selected{% endif %}>Lista</option>
+                <option value="imagen" {% if nota.note_type == "imagen" %}selected{% endif %}>Imagen</option>
+            </select>
+            <br/>
+
+            <div id="normalContent" class="noteContent" {% if nota.note_type != "normal" %}style="display:none;"{% endif %}>
+                <label for="edContent">Contenido</label>
+                <textarea id="edContent" name="edContent" placeholder="Contenido...">{{ nota.content if nota.note_type == "normal" }}</textarea>
+            </div>
+
+            <div id="listaContent" class="noteContent" {% if nota.note_type != "lista" %}style="display:none;"{% endif %}>
+                <label for="edLista">Elementos (separados por comas)</label>
+                <textarea id="edLista" name="edLista" placeholder="Elemento1, Elemento2, Elemento3...">{% if nota.note_type == "lista" %}{{ ', '.join(nota.content) }}{% endif %}</textarea>
+            </div>
+
+            <div id="imagenContent" class="noteContent" {% if nota.note_type != "imagen" %}style="display:none;"{% endif %}>
+                <label for="edImagen">URL de la Imagen</label>
+                <input type="text" id="edImagen" name="edImagen" placeholder="http://..." value="{% if nota.note_type == "imagen" %}{{ nota.content.url }}{% endif %}" />
+                <br/>
+                <label for="edTexto">Texto</label>
+                <textarea id="edTexto" name="edTexto" placeholder="Texto...">{% if nota.note_type == "imagen" %}{{ nota.content.text }}{% endif %}</textarea>
+            </div>
+
+            <label for="edSection">Sección (opcional)</label>
+            <input type="text" id="edSection" name="edSection" placeholder="Sección..." value="{{ nota.section }}" />
+            <br/>
+
+            <div style="margin: 5px">
+                <a href="#" onclick="document.frmEditNota.submit()" class="btn btn-primary">
+                    <img width="24px" src="/static/edit.svg" title="Actualizar" />
+                    &nbsp;
+                    Actualizar
+                </a>
+                <a href="#" onclick="window.location='/'" class="btn btn-primary">
+                    <img width="24px" src="/static/back.svg" title="Volver" />
+                    &nbsp;
+                    Volver
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('edType').addEventListener('change', function() {
+        var noteType = this.value;
+        var contents = document.querySelectorAll('.noteContent');
+        contents.forEach(function(content) {
+            content.style.display = 'none';
+        });
+
+        if (noteType === 'normal') {
+            document.getElementById('normalContent').style.display = 'block';
+        } else if (noteType === 'lista') {
+            document.getElementById('listaContent').style.display = 'block';
+        } else if (noteType === 'imagen') {
+            document.getElementById('imagenContent').style.display = 'block';
+        }
+    });
+
+    document.getElementById('edType').dispatchEvent(new Event('change'));
+</script>
+
+{% endif %}
+{% endblock %}

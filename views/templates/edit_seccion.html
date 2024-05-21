@@ -1,0 +1,33 @@
+{% extends "skeleton.html" %}
+
+{% block contents %}
+
+{% if usr %}
+
+<div id="dvEditSeccion" class="card" style="margin: 10px">
+    <div class="card-header">Editar Sección</div>
+    <div class="card-body">
+        <form id="frmEditSeccion" name="frmEditSeccion" action="/seccion/edit" method="POST">
+            <input type="hidden" id="seccionId" name="seccionId" value="{{ seccion.get_safe_id(srp) }}" /> <!-- TODO: Hay un problema al pasar el id -->
+            <label for="edName">Nombre de la Sección</label>
+            <input type="text" id="edName" name="edName" value="{{ seccion.name }}" placeholder="Nombre..." required />
+            <br/>
+
+            <div style="margin: 5px">
+                <a href="#" onclick="document.frmEditSeccion.submit()" class="btn btn-primary">
+                    <img width="24px" src="/static/edit.svg" title="Actualizar" />
+                    &nbsp;
+                    Actualizar
+                </a>
+                <a href="#" onclick="window.location='/'" class="btn btn-primary">
+                    <img width="24px" src="/static/back.svg" title="Volver" />
+                    &nbsp;
+                    Volver
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endif %}
+{% endblock %}
