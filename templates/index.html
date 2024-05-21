@@ -1,0 +1,97 @@
+{% extends "skeleton.html" %}
+
+{% block contents %}
+
+{% if usr %}
+
+<div class="card" id="dvNotas" style="margin: 10px">
+    <div class="card-header">Notas</div>
+    <div class="card-body">
+        {% if nota_list %}
+            <ul class="list-group list-group-flush list-group-numbered">
+                {% for nota_entry in nota_list %}
+                    <li class="list-group-item">
+                        <a class="btn btn-warning" href="#" onclick="window.location='/nota/delete?nota_id={{ nota_entry.get_safe_id(srp) }}'" role="button">
+                            <img width="24px" src="/static/delete.svg" title="delete" />
+                            &nbsp;
+                            Borrar
+                        </a>
+                        &nbsp;
+                        {% include "nota_entry.html" %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <b>No hay notas disponibles...</b>
+        {% endif %}
+        <div id="dvNotasButtons" style="margin-top: 5%">
+            <a class="btn btn-primary" href="#" onclick="window.location='/nota/add'" role="button">
+                <img width="24px" src="/static/add.svg" title="add" />
+                &nbsp;
+                Añadir Nota
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="card" id="dvSecciones" style="margin: 10px">
+    <div class="card-header">Secciones</div>
+    <div class="card-body">
+        {% if seccion_list %}
+            <ul class="list-group list-group-flush list-group-numbered">
+                {% for seccion_entry in seccion_list %}
+                    <li class="list-group-item">
+                        <a class="btn btn-warning" href="#" onclick="window.location='/seccion/delete?seccion_id={{ seccion_entry.get_safe_id(srp) }}'" role="button">
+                            <img width="24px" src="/static/delete.svg" title="delete" />
+                            &nbsp;
+                            Borrar
+                        </a>
+                        &nbsp;
+                        <b>{{ seccion_entry.name }}</b>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <b>No hay secciones disponibles...</b>
+        {% endif %}
+        <div id="dvSeccionesButtons" style="margin-top: 5%">
+            <a class="btn btn-primary" href="#" onclick="window.location='/seccion/add'" role="button">
+                <img width="24px" src="/static/add.svg" title="add" />
+                &nbsp;
+                Añadir Sección
+            </a>
+        </div>
+    </div>
+</div>
+
+{% else %}
+
+<div id="dvLogin" class="card" style="margin: 10px">
+    <div class="card-header">Login</div>
+    <div class="card-body">
+        <form id="frmLogin" name="frmLogin" action="/login" method="POST">
+            <label for="edEmail">Email</label>
+            <input type="text" id="edEmail" name="edEmail" placeholder="email..." />
+            <br/>
+            <label for="edPswd">Contraseña</label>
+            <input type="password" id="edPswd" name="edPswd" />
+            <p style="margin: 10px">
+                <a href="#" onclick="document.frmLogin.submit()" class="btn btn-primary">
+                    <img width="24px" src="/static/login.svg" title="login" />
+                    &nbsp;
+                    Login
+                </a>
+                &nbsp;
+                <a href="#" onclick="document.frmLogin.action = '/user/add'; document.frmLogin.submit()" class="btn btn-primary">
+                    <img width="24px" src="/static/register.svg" title="register" />
+                    &nbsp;
+                    Register
+                </a>
+            </p>
+        </form>
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "skeleton.html" %}
+
+{% block contents %}
+
+{% if usr %}
+
+<div id="dvAddSeccion" class="card" style="margin: 10px">
+    <div class="card-header">Nueva Sección</div>
+    <div class="card-body">
+        <form id="frmAddSeccion" name="frmAddSeccion" action="/seccion/add" method="POST">
+            <label for="edName">Nombre de la Sección</label>
+            <input type="text" id="edName" name="edName" placeholder="Nombre..." required />
+            <br/>
+
+            <div style="margin: 5px">
+                <a href="#" onclick="document.frmAddSeccion.submit()" class="btn btn-primary">
+                    <img width="24px" src="/login.svg" title="Añadir" />
+                    &nbsp;
+                    Añadir
+                </a>
+                <a href="#" onclick="window.location='/'" class="btn btn-primary">
+                    <img width="24px" src="/back.svg" title="Volver" />
+                    &nbsp;
+                    Volver
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endif %}
+{% endblock %}
