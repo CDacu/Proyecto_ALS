@@ -12,6 +12,10 @@ class User(flask_login.mixins.UserMixin):
     def email(self):
         return self.__email
 
+    @property
+    def oid(self):
+        return self.__oid__.num
+
     def get_id(self):
         return self.email
 
@@ -19,7 +23,7 @@ class User(flask_login.mixins.UserMixin):
         return safe.check_password_hash(self.__pswd, other_pswd)
 
     @staticmethod
-    def current():
+    def current() -> "User":
         usr = flask_login.current_user
 
         if usr.is_anonymous:

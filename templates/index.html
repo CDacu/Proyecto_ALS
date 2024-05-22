@@ -11,12 +11,12 @@
             <ul class="list-group list-group-flush list-group-numbered">
                 {% for nota_entry in nota_list %}
                     <li class="list-group-item">
-                        <a class="btn btn-warning" href="#" onclick="window.location='/nota/delete?nota_id={{ nota_entry.get_safe_id(srp) }}'" role="button">
+                        <a class="btn btn-warning" href="#" onclick="window.location='/nota/delete?nota_id={{ nota_entry.oid }}'" role="button">
                             <img width="24px" src="/static/delete.svg" title="delete" />
                             &nbsp;
                             Borrar
                         </a>
-                        <a class="btn btn-secondary" href="#" onclick="window.location='/nota/edit?nota_id={{ nota_entry.get_safe_id(srp) }}'" role="button">
+                        <a class="btn btn-secondary" href="#" onclick="window.location='/nota/edit/{{ nota_entry.oid }}'" role="button">
                             <img width="24px" src="/static/edit.svg" title="edit" /> <!-- TODO: No hay icono Edit (No deberia ser problema, a futuro se buscan nuevos iconos)-->
                             &nbsp;
                             Editar
@@ -46,12 +46,12 @@
             <ul class="list-group list-group-flush list-group-numbered">
                 {% for seccion_entry in seccion_list %}
                     <li class="list-group-item">
-                        <a class="btn btn-warning" href="#" onclick="window.location='/seccion/delete?seccion_id={{ seccion_entry.get_safe_id(srp) }}'" role="button">
+                        <a class="btn btn-warning" href="#" onclick="window.location='/seccion/delete?seccion_id={{ seccion_entry.oid }}'" role="button">
                             <img width="24px" src="/static/delete.svg" title="delete" />
                             &nbsp;
                             Borrar
                         </a>
-                        <a class="btn btn-secondary" href="#" onclick="window.location='/seccion/edit?seccion_id={{ seccion_entry.get_safe_id(srp) }}'" role="button">
+                        <a class="btn btn-secondary" href="#" onclick="window.location='/seccion/edit/{{ seccion_entry.oid }}'" role="button">
                             <img width="24px" src="/static/edit.svg" title="edit" />
                             &nbsp;
                             Editar

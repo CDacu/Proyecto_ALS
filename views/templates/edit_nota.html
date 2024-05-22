@@ -7,8 +7,8 @@
 <div id="dvEditNota" class="card" style="margin: 10px">
     <div class="card-header">Editar Nota</div>
     <div class="card-body">
-        <form id="frmEditNota" name="frmEditNota" action="/nota/edit/{{ nota.get_safe_id(srp) }}" method="POST">
-            <input type="hidden" id="notaId" name="notaId" value="{{ nota.get_safe_id(srp) }}" />
+        <form id="frmEditNota" name="frmEditNota" action="/nota/edit/{{ nota.oid }}" method="POST">
+            <input type="hidden" id="notaId" name="notaId" value="{{ nota.oid }}" />
             <label for="edTitle">Título</label>
             <input type="text" id="edTitle" name="edTitle" value="{{ nota.title }}" placeholder="Título..." required />
             <br/>

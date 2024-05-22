@@ -5,33 +5,29 @@ class Seccion:
     def __init__(self, email, name):
         self.__email = email
         self.__name = name
-        self.__notas = []
 
     @property
     def usr_email(self):
         return self.__email
 
     @property
+    def oid(self):
+        return self.__oid__.num
+
+    @property
     def name(self):
         return self.__name
 
-    @property
-    def notas(self):
-        return self.__notas
+    @name.setter
+    def name(self, name):
+        self.__name = name
 
     def get_safe_id(self, srp):
         return srp.safe_from_oid(self.__oid__)
 
-    def add_nota(self, nota):
-        if nota.section == self.name:
-            self.__notas.append(nota)
-
-    def remove_nota(self, title):
-        for nota in self.__notas:
-            if nota.title == title:
-                self.__notas.remove(nota)
-                return True
-        return False
+    @staticmethod
+    def find(srp: sirope.Sirope, oid: int) -> "Seccion":
+        return srp.find_first(Seccion, lambda s: s.oid == oid)
 
     def __str__(self):
         notas_str = "\n  ".join(str(nota) for nota in self.__notas)

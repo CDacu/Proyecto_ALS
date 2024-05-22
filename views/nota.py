@@ -9,8 +9,8 @@ from model.notaDTO import Nota
 def get_blprint():
     nota_module = flask.blueprints.Blueprint("nota_blpr", __name__,
                                              url_prefix="/nota",
-                                             template_folder="templates/nota",
-                                             static_folder="static/nota")
+                                             template_folder="templates",
+                                             static_folder="static")
     srp = sirope.Sirope()
     return nota_module, srp
 
@@ -22,10 +22,8 @@ nota_blpr, srp = get_blprint()
 @nota_blpr.route("/add", methods=["GET", "POST"])
 def nota_add():
     if flask.request.method == "GET":
-        sust = {
-            "usr": User.current()
-        }
-        return flask.render_template("add_nota.html", **sust)
+        data = {"usr": User.current()}
+        return flask.render_template("add_nota.html", **data)
     else:
         usr = User.current()
         nota_title = flask.request.form.get("edTitle", "").strip()
@@ -54,15 +52,13 @@ def nota_add():
         return flask.redirect("/")
 
 
-
 @flask_login.login_required
 @nota_blpr.route("/delete")
 def nota_delete():
-    nota_oid = flask.request.args.get("nota_id", "").strip()
-    nota = srp.oid_from_safe(nota_oid)
+    nota = Nota.find(srp, int(flask.request.args.get("nota_id", "").strip()))
 
     if nota:
-        srp.delete(nota)
+        srp.delete(nota.__oid__)
         flask.flash("Nota borrada.")
     else:
         flask.flash("Nota no encontrada.")
@@ -74,17 +70,15 @@ def nota_delete():
 @nota_blpr.route("/edit/<oid>", methods=["GET", "POST"])
 def nota_edit(oid):
     usr = User.current()
-    nota = srp.load(Nota, oid)
+    nota = Nota.find(srp, int(oid))
 
     if flask.request.method == "GET":
         if not nota or nota.usr_email != usr.email:
             flask.flash("Nota no encontrada o no autorizada.")
             return flask.redirect("/")
-        sust = {
-            "usr": usr,
-            "nota": nota
-        }
-        return flask.render_template("edit_nota.html", **sust)
+
+        data = {"usr": usr, "nota": nota}
+        return flask.render_template("edit_nota.html", **data)
     else:
         nota_title = flask.request.form.get("edTitle", "").strip()
         nota_type = flask.request.form.get("edType", "").strip()
@@ -114,4 +108,3 @@ def nota_edit(oid):
 
         flask.flash("Nota actualizada exitosamente.")
         return flask.redirect("/")
-
