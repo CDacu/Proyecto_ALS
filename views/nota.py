@@ -19,7 +19,7 @@ nota_blpr, srp = get_blprint()
 
 
 @flask_login.login_required
-@nota_blpr.route("add", methods=["GET", "POST"])
+@nota_blpr.route("/add", methods=["GET", "POST"])
 def nota_add():
     if flask.request.method == "GET":
         sust = {
@@ -29,17 +29,30 @@ def nota_add():
     else:
         usr = User.current()
         nota_title = flask.request.form.get("edTitle", "").strip()
-        nota_content = flask.request.form.get("edContent", "").strip()
         nota_type = flask.request.form.get("edType", "").strip()
         nota_section = flask.request.form.get("edSection", "").strip()
 
-        if not nota_title or not nota_content or not nota_type:
-            flask.flash("Faltan datos de la nota.")
-            return flask.redirect(flask.url_for("nota_blpr.nota_add"))
+        if nota_type == "normal":
+            nota_content = flask.request.form.get("edContent", "").strip()
+        elif nota_type == "lista":
+            nota_content = flask.request.form.get("edLista", "").strip().split(',')
+        elif nota_type == "imagen":
+            nota_content = {
+                "url": flask.request.form.get("edImagen", "").strip(),
+                "text": flask.request.form.get("edTexto", "").strip()
+            }
+        else:
+            nota_content = ""
+
+        if not nota_title:
+            flask.flash("El título de la nota no puede estar vacío.")
+            return flask.redirect("/nota/add")
 
         srp.save(Nota(usr.email, nota_title, nota_content, nota_type, nota_section))
-        flask.flash(f"Nota '{nota_title}' añadida.")
+
+        flask.flash("Nota añadida exitosamente.")
         return flask.redirect("/")
+
 
 
 @flask_login.login_required
@@ -58,33 +71,47 @@ def nota_delete():
 
 
 @flask_login.login_required
-@nota_blpr.route("/edit", methods=["GET", "POST"])
-def nota_edit():
+@nota_blpr.route("/edit/<oid>", methods=["GET", "POST"])
+def nota_edit(oid):
+    usr = User.current()
+    nota = srp.load(Nota, oid)
+
     if flask.request.method == "GET":
-        nota_oid = flask.request.args.get("nota_id", "").strip()
-        nota = srp.oid_from_safe(nota_oid)
-
-        if nota:
-            sust = {
-                "usr": User.current(),
-                "nota": nota
-            }
-            return flask.render_template("edit_nota.html", **sust)
-        else:
-            flask.flash("Nota no encontrada.")
+        if not nota or nota.usr_email != usr.email:
+            flask.flash("Nota no encontrada o no autorizada.")
             return flask.redirect("/")
+        sust = {
+            "usr": usr,
+            "nota": nota
+        }
+        return flask.render_template("edit_nota.html", **sust)
     else:
-        nota_oid = flask.request.form.get("nota_id", "").strip()
-        nota = srp.oid_from_safe(nota_oid)
+        nota_title = flask.request.form.get("edTitle", "").strip()
+        nota_type = flask.request.form.get("edType", "").strip()
+        nota_section = flask.request.form.get("edSection", "").strip()
 
-        if nota:
-            nota.title = flask.request.form.get("edTitle", "").strip()
-            nota.content = flask.request.form.get("edContent", "").strip()
-            nota.note_type = flask.request.form.get("edType", "").strip()
-            nota.section = flask.request.form.get("edSection", "").strip()
-            srp.save(nota)
-            flask.flash(f"Nota '{nota.title}' modificada.")
+        if nota_type == "normal":
+            nota_content = flask.request.form.get("edContent", "").strip()
+        elif nota_type == "lista":
+            nota_content = flask.request.form.get("edLista", "").strip().split(',')
+        elif nota_type == "imagen":
+            nota_content = {
+                "url": flask.request.form.get("edImagen", "").strip(),
+                "text": flask.request.form.get("edTexto", "").strip()
+            }
         else:
-            flask.flash("Nota no encontrada.")
+            nota_content = ""
 
+        if not nota_title:
+            flask.flash("El título de la nota no puede estar vacío.")
+            return flask.redirect(f"/nota/edit/{oid}")
+
+        nota.title = nota_title
+        nota.content = nota_content
+        nota.note_type = nota_type
+        nota.section = nota_section
+        srp.save(nota)
+
+        flask.flash("Nota actualizada exitosamente.")
         return flask.redirect("/")
+

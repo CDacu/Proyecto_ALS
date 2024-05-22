@@ -7,8 +7,8 @@
 <div id="dvEditNota" class="card" style="margin: 10px">
     <div class="card-header">Editar Nota</div>
     <div class="card-body">
-        <form id="frmEditNota" name="frmEditNota" action="/nota/edit" method="POST">
-            <input type="hidden" id="notaId" name="notaId" value="{{ nota.get_safe_id(srp) }}" /> <!-- TODO: Hay un problema al pasar el id -->
+        <form id="frmEditNota" name="frmEditNota" action="/nota/edit/{{ nota.get_safe_id(srp) }}" method="POST">
+            <input type="hidden" id="notaId" name="notaId" value="{{ nota.get_safe_id(srp) }}" />
             <label for="edTitle">Título</label>
             <input type="text" id="edTitle" name="edTitle" value="{{ nota.title }}" placeholder="Título..." required />
             <br/>
@@ -81,3 +81,4 @@
 
 {% endif %}
 {% endblock %}
+

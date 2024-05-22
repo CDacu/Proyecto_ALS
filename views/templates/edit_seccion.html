@@ -7,8 +7,7 @@
 <div id="dvEditSeccion" class="card" style="margin: 10px">
     <div class="card-header">Editar Sección</div>
     <div class="card-body">
-        <form id="frmEditSeccion" name="frmEditSeccion" action="/seccion/edit" method="POST">
-            <input type="hidden" id="seccionId" name="seccionId" value="{{ seccion.get_safe_id(srp) }}" /> <!-- TODO: Hay un problema al pasar el id -->
+        <form id="frmEditSeccion" name="frmEditSeccion" action="/seccion/edit/{{ seccion.get_safe_id(srp) }}" method="POST">
             <label for="edName">Nombre de la Sección</label>
             <input type="text" id="edName" name="edName" value="{{ seccion.name }}" placeholder="Nombre..." required />
             <br/>
@@ -31,3 +30,4 @@
 
 {% endif %}
 {% endblock %}
+
