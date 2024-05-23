@@ -1,108 +1,127 @@
 {% extends "skeleton.html" %}
 
 {% block contents %}
-
 {% if usr %}
-
-<div class="card" id="dvNotas" style="margin: 10px">
-    <div class="card-header">Notas</div>
+<div class="card mb-4 shadow-sm">
     <div class="card-body">
-        {% if nota_list %}
-            <ul class="list-group list-group-flush list-group-numbered">
-                {% for nota_entry in nota_list %}
-                    <li class="list-group-item">
-                        <a class="btn btn-warning" href="#" onclick="window.location='/nota/delete?nota_id={{ nota_entry.oid }}'" role="button">
-                            <img width="24px" src="/static/delete.svg" title="delete" />
-                            &nbsp;
-                            Borrar
-                        </a>
-                        <a class="btn btn-secondary" href="#" onclick="window.location='/nota/edit/{{ nota_entry.oid }}'" role="button">
-                            <img width="24px" src="/static/edit.svg" title="edit" /> <!-- TODO: No hay icono Edit (No deberia ser problema, a futuro se buscan nuevos iconos)-->
-                            &nbsp;
-                            Editar
-                        </a>
-                        &nbsp;
-                        {% include "nota_entry.html" %}
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <b>No hay notas disponibles...</b>
-        {% endif %}
-        <div id="dvNotasButtons" style="margin-top: 5%">
+        <div class="d-flex justify-content-end">
+            <a class="btn btn-primary me-2" href="#" onclick="window.location='/seccion/add'" role="button">
+                <img width="24px" src="/static/add.svg" title="add" />
+                &nbsp;Añadir Sección
+            </a>
             <a class="btn btn-primary" href="#" onclick="window.location='/nota/add'" role="button">
                 <img width="24px" src="/static/add.svg" title="add" />
-                &nbsp;
-                Añadir Nota
+                &nbsp;Añadir Nota
             </a>
         </div>
-    </div>
-</div>
-
-<div class="card" id="dvSecciones" style="margin: 10px">
-    <div class="card-header">Secciones</div>
-    <div class="card-body">
-        {% if seccion_list %}
-            <ul class="list-group list-group-flush list-group-numbered">
-                {% for seccion_entry in seccion_list %}
-                    <li class="list-group-item">
-                        <a class="btn btn-warning" href="#" onclick="window.location='/seccion/delete?seccion_id={{ seccion_entry.oid }}'" role="button">
-                            <img width="24px" src="/static/delete.svg" title="delete" />
-                            &nbsp;
-                            Borrar
-                        </a>
-                        <a class="btn btn-secondary" href="#" onclick="window.location='/seccion/edit/{{ seccion_entry.oid }}'" role="button">
-                            <img width="24px" src="/static/edit.svg" title="edit" />
-                            &nbsp;
-                            Editar
-                        </a>
-                        &nbsp;
-                        <b>{{ seccion_entry.name }}</b>
-                    </li>
+        {% if notas_sin_seccion %}
+            <div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
+                {% for nota in notas_sin_seccion %}
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ nota.title }}</h5>
+                                {% if nota.note_type == 'lista' %}
+                                    <ul class="list-group">
+                                        {% for item in nota.content %}
+                                            <li class="list-group-item">{{ item }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% elif nota.note_type == 'imagen' %}
+                                    <a href="{{ nota.content.url }}">{{ nota.content.url }}</a>
+                                    <p>{{ nota.content.text }}</p>
+                                {% else %}
+                                    <p class="card-text">{{ nota.content }}</p>
+                                {% endif %}
+                                <div class="d-flex justify-content-end align-items-center">
+                                    <a class="btn btn-warning btn-sm me-1" href="#" onclick="window.location='/nota/delete?nota_id={{ nota.oid }}'" role="button">
+                                        <img width="16px" src="/static/delete.svg" title="delete" />
+                                    </a>
+                                    <a class="btn btn-secondary btn-sm" href="#" onclick="window.location='/nota/edit/{{ nota.oid }}'" role="button">
+                                        <img width="16px" src="/static/edit.svg" title="edit" />
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 {% endfor %}
-            </ul>
-        {% else %}
-            <b>No hay secciones disponibles...</b>
+            </div>
         {% endif %}
-        <div id="dvSeccionesButtons" style="margin-top: 5%">
-            <a class="btn btn-primary" href="#" onclick="window.location='/seccion/add'" role="button">
-                <img width="24px" src="/static/add.svg" title="add" />
-                &nbsp;
-                Añadir Sección
-            </a>
-        </div>
+        {% if notas_por_seccion %}
+            {% for seccion, notas in notas_por_seccion.items() %}
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4>{{ seccion.name }}</h4>
+                    <div>
+                        <a class="btn btn-warning btn-sm me-1" href="#" onclick="window.location='/seccion/delete?seccion_id={{ seccion.oid }}'" role="button">
+                            <img width="16px" src="/static/delete.svg" title="delete" />
+                            &nbsp;Borrar Sección
+                        </a>
+                        <a class="btn btn-secondary btn-sm" href="#" onclick="window.location='/seccion/edit/{{ seccion.oid }}'" role="button">
+                            <img width="16px" src="/static/edit.svg" title="edit" />
+                            &nbsp;Editar Sección
+                        </a>
+                    </div>
+                </div>
+                <div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
+                    {% for nota in notas %}
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ nota.title }}</h5>
+                                    {% if nota.note_type == 'lista' %}
+                                        <ul class="list-group">
+                                            {% for item in nota.content %}
+                                                <li class="list-group-item">{{ item }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% elif nota.note_type == 'imagen' %}
+                                        <a href="{{ nota.content.url }}">{{ nota.content.url }}</a>
+                                        <p>{{ nota.content.text }}</p>
+                                    {% else %}
+                                        <p class="card-text">{{ nota.content }}</p>
+                                    {% endif %}
+                                    <div class="d-flex justify-content-end align-items-center">
+                                        <a class="btn btn-warning btn-sm me-1" href="#" onclick="window.location='/nota/delete?nota_id={{ nota.oid }}'" role="button">
+                                            <img width="16px" src="/static/delete.svg" title="delete" />
+                                        </a>
+                                        <a class="btn btn-secondary btn-sm" href="#" onclick="window.location='/nota/edit/{{ nota.oid }}'" role="button">
+                                            <img width="16px" src="/static/edit.svg" title="edit" />
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        {% endif %}
     </div>
 </div>
-
 {% else %}
-
-<div id="dvLogin" class="card" style="margin: 10px">
+<div class="card mb-4 shadow-sm">
     <div class="card-header">Login</div>
     <div class="card-body">
         <form id="frmLogin" name="frmLogin" action="/login" method="POST">
-            <label for="edEmail">Email</label>
-            <input type="text" id="edEmail" name="edEmail" placeholder="email..." />
-            <br/>
-            <label for="edPswd">Contraseña</label>
-            <input type="password" id="edPswd" name="edPswd" />
-            <p style="margin: 10px">
-                <a href="#" onclick="document.frmLogin.submit()" class="btn btn-primary">
+            <div class="mb-3">
+                <label for="edEmail" class="form-label">Email</label>
+                <input type="text" class="form-control" id="edEmail" name="edEmail" placeholder="email..." required>
+            </div>
+            <div class="mb-3">
+                <label for="edPswd" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="edPswd" name="edPswd" required>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary">
                     <img width="24px" src="/static/login.svg" title="login" />
-                    &nbsp;
-                    Login
-                </a>
-                &nbsp;
-                <a href="#" onclick="document.frmLogin.action = '/user/add'; document.frmLogin.submit()" class="btn btn-primary">
+                    &nbsp;Login
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="document.frmLogin.action = '/user/add'; document.frmLogin.submit()">
                     <img width="24px" src="/static/register.svg" title="register" />
-                    &nbsp;
-                    Register
-                </a>
-            </p>
+                    &nbsp;Register
+                </button>
+            </div>
         </form>
     </div>
 </div>
-
 {% endif %}
-
 {% endblock %}
-
