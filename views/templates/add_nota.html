@@ -1,57 +1,62 @@
 {% extends "skeleton.html" %}
 
 {% block contents %}
-
 {% if usr %}
-
-<div id="dvAddNota" class="card" style="margin: 10px">
+<div id="dvAddNota" class="card mb-4">
     <div class="card-header">Nueva Nota</div>
     <div class="card-body">
         <form id="frmAddNota" name="frmAddNota" action="/nota/add" method="POST">
-            <label for="edTitle">Título</label>
-            <input type="text" id="edTitle" name="edTitle" placeholder="Título..." required />
-            <br/>
-
-            <label for="edType">Tipo</label>
-            <select id="edType" name="edType" required>
-                <option value="normal">Normal</option>
-                <option value="lista">Lista</option>
-                <option value="imagen">Imagen</option>
-            </select>
-            <br/>
-
-            <div id="normalContent" class="noteContent">
-                <label for="edContent">Contenido</label>
-                <textarea id="edContent" name="edContent" placeholder="Contenido..."></textarea>
+            <div class="mb-3">
+                <label for="edTitle" class="form-label">Título</label>
+                <input type="text" class="form-control" id="edTitle" name="edTitle" placeholder="Título..." required />
             </div>
 
-            <div id="listaContent" class="noteContent" style="display:none;">
-                <label for="edLista">Elementos (separados por comas)</label>
-                <textarea id="edLista" name="edLista" placeholder="Elemento1, Elemento2, Elemento3..."></textarea>
+            <div class="mb-3">
+                <label for="edType" class="form-label">Tipo</label>
+                <select class="form-select" id="edType" name="edType" required>
+                    <option value="normal">Normal</option>
+                    <option value="lista">Lista</option>
+                    <option value="imagen">Imagen</option>
+                </select>
             </div>
 
-            <div id="imagenContent" class="noteContent" style="display:none;">
-                <label for="edImagen">URL de la Imagen</label>
-                <input type="text" id="edImagen" name="edImagen" placeholder="http://..." />
-                <br/>
-                <label for="edTexto">Texto</label>
-                <textarea id="edTexto" name="edTexto" placeholder="Texto..."></textarea>
+            <div id="normalContent" class="noteContent mb-3">
+                <label for="edContent" class="form-label">Contenido</label>
+                <textarea class="form-control" id="edContent" name="edContent" placeholder="Contenido..."></textarea>
             </div>
 
-            <label for="edSection">Sección (opcional)</label>
-            <input type="text" id="edSection" name="edSection" placeholder="Sección..." />
-            <br/>
+            <div id="listaContent" class="noteContent mb-3" style="display:none;">
+                <label for="edLista" class="form-label">Elementos (separados por comas)</label>
+                <textarea class="form-control" id="edLista" name="edLista" placeholder="Elemento1, Elemento2, Elemento3..."></textarea>
+            </div>
 
-            <div style="margin: 5px">
-                <a href="#" onclick="document.frmAddNota.submit()" class="btn btn-primary">
+            <div id="imagenContent" class="noteContent mb-3" style="display:none;">
+                <label for="edImagen" class="form-label">URL de la Imagen</label>
+                <input type="text" class="form-control" id="edImagen" name="edImagen" placeholder="http://..." />
+                <div class="mt-3">
+                    <label for="edTexto" class="form-label">Texto</label>
+                    <textarea class="form-control" id="edTexto" name="edTexto" placeholder="Texto..."></textarea>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="edSection" class="form-label">Sección (opcional)</label>
+                <select class="form-select" id="edSection" name="edSection">
+                    <option value="" selected></option>
+                    {% for seccion_entry in seccion_list %}
+                        <option value="{{ seccion_entry.name }}">{{ seccion_entry.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">
                     <img width="24px" src="/static/add.svg" title="Añadir" />
-                    &nbsp;
-                    Añadir
-                </a>
-                <a href="#" onclick="window.location='/'" class="btn btn-primary">
+                    &nbsp;Añadir
+                </button>
+                <a href="/" class="btn btn-secondary">
                     <img width="24px" src="/static/back.svg" title="Volver" />
-                    &nbsp;
-                    Volver
+                    &nbsp;Volver
                 </a>
             </div>
         </form>
@@ -77,7 +82,5 @@
 
     document.getElementById('edType').dispatchEvent(new Event('change'));
 </script>
-
 {% endif %}
 {% endblock %}
-

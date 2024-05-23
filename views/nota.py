@@ -2,6 +2,7 @@ import flask
 import sirope
 import flask_login
 
+from model.seccionDTO import Seccion
 from model.userDTO import User
 from model.notaDTO import Nota
 
@@ -22,7 +23,8 @@ nota_blpr, srp = get_blprint()
 @nota_blpr.route("/add", methods=["GET", "POST"])
 def nota_add():
     if flask.request.method == "GET":
-        data = {"usr": User.current()}
+        seccion_list = list(srp.filter(Seccion, lambda s: s.usr_email == User.current().email))
+        data = {"usr": User.current(), "seccion_list": seccion_list}
         return flask.render_template("add_nota.html", **data)
     else:
         usr = User.current()
@@ -77,7 +79,8 @@ def nota_edit(oid):
             flask.flash("Nota no encontrada o no autorizada.")
             return flask.redirect("/")
 
-        data = {"usr": usr, "nota": nota}
+        seccion_list = list(srp.filter(Seccion, lambda s: s.usr_email == User.current().email))
+        data = {"usr": usr, "nota": nota, "seccion_list": seccion_list}
         return flask.render_template("edit_nota.html", **data)
     else:
         nota_title = flask.request.form.get("edTitle", "").strip()

@@ -22,21 +22,20 @@ def create_app():
     flapp.register_blueprint(user_blpr)
     flapp.register_blueprint(nota_blpr)
     flapp.register_blueprint(seccion_blpr)
+
+    @login.unauthorized_handler
+    def unauthorized_handler():
+        flask.flash("Unauthorized access.")
+        return flask.redirect("/")
+
+    @login.user_loader
+    def user_loader(email: str) -> User:
+        return User.find(sirop, email)
+
     return flapp, sirop, login
 
 
 app, srp, lm = create_app()
-
-
-@lm.unauthorized_handler
-def unauthorized_handler():
-    flask.flash("Unauthorized access.")
-    return flask.redirect("/")
-
-
-@lm.user_loader
-def user_loader(email: str) -> User:
-    return User.find(srp, email)
 
 
 @app.route("/favicon.ico")
@@ -78,18 +77,25 @@ def logout():
 @app.route("/")
 def main():
     usr = User.current()
-    nota_list = []
     seccion_list = []
+    notas_por_seccion = {}
+    notas_sin_seccion = []
 
     if usr:
-        nota_list = srp.filter(Nota, lambda n: n.usr_email == usr.email)
-        seccion_list = srp.filter(Seccion, lambda s: s.usr_email == usr.email)
+        nota_list = list(srp.filter(Nota, lambda n: n.usr_email == usr.email))
+        seccion_list = list(srp.filter(Seccion, lambda s: s.usr_email == usr.email))
+
+        for seccion in seccion_list:
+            notas_por_seccion[seccion] = [nota for nota in nota_list if nota.section == seccion.name]
+
+        notas_sin_seccion = [nota for nota in nota_list if not nota.section]
 
     sust = {
         "usr": usr,
         "srp": srp,
-        "nota_list": nota_list,
-        "seccion_list": seccion_list
+        "seccion_list": seccion_list,
+        "notas_por_seccion": notas_por_seccion,
+        "notas_sin_seccion": notas_sin_seccion
     }
 
     return flask.render_template("index.html", **sust)
