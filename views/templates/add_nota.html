@@ -16,7 +16,7 @@
                 <select class="form-select" id="edType" name="edType" required>
                     <option value="normal">Normal</option>
                     <option value="lista">Lista</option>
-                    <option value="imagen">Imagen</option>
+                    <option value="enlace">Enlace</option>
                 </select>
             </div>
 
@@ -30,9 +30,9 @@
                 <textarea class="form-control" id="edLista" name="edLista" placeholder="Elemento1, Elemento2, Elemento3..."></textarea>
             </div>
 
-            <div id="imagenContent" class="noteContent mb-3" style="display:none;">
-                <label for="edImagen" class="form-label">URL de la Imagen</label>
-                <input type="text" class="form-control" id="edImagen" name="edImagen" placeholder="http://..." />
+            <div id="enlaceContent" class="noteContent mb-3" style="display:none;">
+                <label for="edEnlace" class="form-label">URL</label>
+                <input type="text" class="form-control" id="edEnlace" name="edEnlace" placeholder="http://..." />
                 <div class="mt-3">
                     <label for="edTexto" class="form-label">Texto</label>
                     <textarea class="form-control" id="edTexto" name="edTexto" placeholder="Texto..."></textarea>
@@ -75,8 +75,8 @@
             document.getElementById('normalContent').style.display = 'block';
         } else if (noteType === 'lista') {
             document.getElementById('listaContent').style.display = 'block';
-        } else if (noteType === 'imagen') {
-            document.getElementById('imagenContent').style.display = 'block';
+        } else if (noteType === 'enlace') {
+            document.getElementById('enlaceContent').style.display = 'block';
         }
     });
 

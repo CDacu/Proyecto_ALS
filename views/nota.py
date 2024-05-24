@@ -36,9 +36,9 @@ def nota_add():
             nota_content = flask.request.form.get("edContent", "").strip()
         elif nota_type == "lista":
             nota_content = flask.request.form.get("edLista", "").strip().split(',')
-        elif nota_type == "imagen":
+        elif nota_type == "enlace":
             nota_content = {
-                "url": flask.request.form.get("edImagen", "").strip(),
+                "url": flask.request.form.get("edEnlace", "").strip(),
                 "text": flask.request.form.get("edTexto", "").strip()
             }
         else:
@@ -91,9 +91,9 @@ def nota_edit(oid):
             nota_content = flask.request.form.get("edContent", "").strip()
         elif nota_type == "lista":
             nota_content = flask.request.form.get("edLista", "").strip().split(',')
-        elif nota_type == "imagen":
+        elif nota_type == "enlace":
             nota_content = {
-                "url": flask.request.form.get("edImagen", "").strip(),
+                "url": flask.request.form.get("edEnlace", "").strip(),
                 "text": flask.request.form.get("edTexto", "").strip()
             }
         else:

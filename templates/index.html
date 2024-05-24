@@ -27,7 +27,7 @@
                                             <li class="list-group-item">{{ item }}</li>
                                         {% endfor %}
                                     </ul>
-                                {% elif nota.note_type == 'imagen' %}
+                                {% elif nota.note_type == 'enlace' %}
                                     <a href="{{ nota.content.url }}">{{ nota.content.url }}</a>
                                     <p>{{ nota.content.text }}</p>
                                 {% else %}
@@ -74,7 +74,7 @@
                                                 <li class="list-group-item">{{ item }}</li>
                                             {% endfor %}
                                         </ul>
-                                    {% elif nota.note_type == 'imagen' %}
+                                    {% elif nota.note_type == 'enlace' %}
                                         <a href="{{ nota.content.url }}">{{ nota.content.url }}</a>
                                         <p>{{ nota.content.text }}</p>
                                     {% else %}
